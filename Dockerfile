@@ -19,7 +19,8 @@ RUN sed -i 's/^listen\s*=.*$/listen = 127.0.0.1:9000/' /etc/php/7.1/fpm/pool.d/w
     sed -i 's/^\;error_log\s*=\s*syslog\s*$/error_log = \/var\/log\/php\/cli.log/' /etc/php/7.1/cli/php.ini && \
     sed -i 's/^key_buffer\s*=/key_buffer_size =/' /etc/mysql/my.cnf
 
-COPY files/root /
+ADD ./files/root /
+RUN sed -i 's/\r//' /entrypoint.sh
 
 WORKDIR /var/www/
 
