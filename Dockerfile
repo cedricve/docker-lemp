@@ -24,7 +24,7 @@ RUN sed -i 's/\r//' /entrypoint.sh
 
 WORKDIR /var/www/
 
-VOLUME ["/var/www/", "/var/lib/mysql/"]
+VOLUME ["/var/www/", "/etc/nginx/sites-enabled/", "/var/lib/mysql/"]
 
 EXPOSE 80
 
