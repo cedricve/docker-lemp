@@ -4,14 +4,21 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ## Install php nginx mysql supervisor
 RUN apt update && \
-    apt install -y php7.1-fpm php7.1-mysql php7.1-gd php7.1-mcrypt php7.1-mysql php7.1-curl \
+    apt install -y php7.1-fpm php7.1-mysql php7.1-gd php7.1-mcrypt php7.1-mysql php7.1-curl php7.1-dom php7.1-mbstring php7.1-zip php-mongodb \
                        nginx \
                        curl \
+                       git \
 		       supervisor && \
     echo "mysql-server mysql-server/root_password password" | debconf-set-selections && \
     echo "mysql-server mysql-server/root_password_again password" | debconf-set-selections && \
     apt install -y mysql-server && \
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash && \
     rm -rf /var/lib/apt/lists/*
+
+RUN export NVM_DIR="$HOME/.nvm" && \
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && \
+nvm install v8.11.3
 
 ## Configuration
 RUN sed -i 's/^listen\s*=.*$/listen = 127.0.0.1:9000/' /etc/php/7.1/fpm/pool.d/www.conf && \
@@ -35,5 +42,5 @@ WORKDIR /var/www/
 VOLUME ["/var/www/", "/etc/nginx/sites-enabled/", "/var/lib/mysql/"]
 
 EXPOSE 80
-
+EXPOSE 4040
 ENTRYPOINT ["/entrypoint.sh"]
